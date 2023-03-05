@@ -1,0 +1,105 @@
+﻿<Window x:Class="SheetDataTracker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SheetDataTracker"
+        mc:Ignorable="d"
+        Title="Project S.D.T." Height="450" Width="800" FontFamily="Arial" FontSize="14">
+    <DockPanel>
+        <DockPanel Height="40" LastChildFill="False" DockPanel.Dock="Top">
+            <Button Width="80" Height="30" Content="Add" DockPanel.Dock="Left" Margin="5,0,5,0"
+                    Command="{Binding AddCardCommand}">
+                <!--<Button.Background>
+                    <SolidColorBrush Color="DodgerBlue"></SolidColorBrush>
+                </Button.Background>-->
+            </Button>
+            <Button Width="80" Height="30" Content="Reset Data" DockPanel.Dock="Left" Margin="5,0,0,0"
+                    Command="{Binding ResetCommand}"/>
+            <Button Width="80" Height="30" Content="Next Round" DockPanel.Dock="Right" Margin="5,0,5,0" 
+                    Command="{Binding NextRoundCommand}"/>
+            <Button Width="100" Height="30" Content="Reset Rounds" DockPanel.Dock="Right"
+                    Command="{Binding ResetRoundsCommand}"/>
+            <Label Background="White" Height="30" Width="40" Content="{Binding RoundCounter, Mode=TwoWay}"
+                   Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                   FontSize="18" DockPanel.Dock="Right" Margin="0,0,5,0"/>
+        </DockPanel>
+
+        <ScrollViewer DockPanel.Dock="Bottom">
+            <ItemsControl ItemsSource="{Binding Cards}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel></WrapPanel>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <!-- Card template -->
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border CornerRadius="2" BorderBrush="Black" BorderThickness="1" Margin="5,5,5,5">
+                            <DockPanel Width="475" MinHeight="30" Background="#e6e6e6">
+                                <DockPanel DockPanel.Dock="Top" Margin="5,5,5,10" LastChildFill="False">
+                                    <Button Padding="5,0,5,0" Content="Delete" 
+                                        Command="{Binding DeleteCardCommand,
+                                            RelativeSource={RelativeSource AncestorType=local:MainWindow}}"
+                                        CommandParameter="{Binding}" />
+                                    <Button Padding="5,0,5,0" Content="Add variable"
+                                        Command="{Binding AddVariableRowCommand,
+                                            RelativeSource={RelativeSource AncestorType=local:MainWindow}}"
+                                        CommandParameter="{Binding}"/>
+                                    <Button Padding="5,0,5,0" Content="Add constant"
+                                        Command="{Binding AddConstantRowCommand,
+                                            RelativeSource={RelativeSource AncestorType=local:MainWindow}}"
+                                        CommandParameter="{Binding}"/>
+                                    <TextBox DockPanel.Dock="Right" Width="220" Height="20" HorizontalContentAlignment="Center"/>
+                                </DockPanel>
+                                <ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding DataRows}" Margin="5,0,5,0">
+                                    <ItemsControl.Resources>
+                                        <!-- Data row template -->
+                                        <DataTemplate DataType="{x:Type local:DataRow}">
+                                            <DockPanel LastChildFill="False" Height="20" Margin="0,0,0,5">
+                                                <TextBox Width="50" Height="20" Text="{Binding Value, Mode=TwoWay}"/>
+                                                <Label Content="/" Height="24" FontSize="20" Padding="2,0,2,0" />
+                                                <TextBox Width="50" Height="20" Text="{Binding MaxValue}"/>
+                                                <TextBox Width="25" Height="20" Text="{Binding RoundChangeAmount}"/>
+                                                <TextBox Width="100" Height="20" Margin="10,0,0,0" Text="{Binding Name}" />
+                                                <!--Text="{Binding Value, Mode=TwoWay}"-->
+                                                <Label Content="---------------" Height="20" VerticalContentAlignment="Top" Padding="5,0,5,0"
+                                                   Foreground="Gray" />
+                                                <Button Padding="5,0,5,0" Height="20" DockPanel.Dock="Right" Content="Delete"
+                                                    Command="{Binding DataContext.DeleteRowCommand,
+                                                        RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                        CommandParameter="{Binding}"/>
+                                                <Label DockPanel.Dock="Right" Content="]" Height="20" FontSize="17" Padding="2,0,2,0" Margin="0,0,20,0" />
+                                                <TextBox DockPanel.Dock="Right" Width="50" Height="20" HorizontalContentAlignment="Center"
+                                                         Text="{Binding ManualChangeAmount}" KeyUp="TextBox_KeyEnterUpdate"
+                                                         GotFocus="TextBox_GotFocus" />
+                                                <Label DockPanel.Dock="Right" Content="[" Height="20" FontSize="17" Padding="2,0,2,0" />
+                                            </DockPanel>
+                                        </DataTemplate>
+                                        <!-- END Data row template -->
+
+                                        <!-- Constant data row template -->
+                                        <DataTemplate DataType="{x:Type local:ConstantDataRow}">
+                                            <DockPanel LastChildFill="False" Height="20" Margin="0,0,0,5">
+                                                <TextBox Width="80" Height="20" Text="{Binding Value}" />
+                                                <Label Content="/" Height="24" FontSize="20" VerticalContentAlignment="Top" Padding="2,0,2,0" />
+                                                <TextBox Width="40" Height="20" Text="{Binding OptionalValue}" />
+                                                <TextBox Width="100" Height="20" Margin="15,0,0,0" Text="{Binding Name}" />
+                                                <Button Padding="5,0,5,0" DockPanel.Dock="Right" Content="Delete"
+                                                    Command="{Binding DataContext.DeleteRowCommand,
+                                                        RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                        CommandParameter="{Binding}"/>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                        <!-- END Constant data row template -->
+                                    </ItemsControl.Resources>
+                                </ItemsControl>
+                            </DockPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <!-- END Card template -->
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</Window>
